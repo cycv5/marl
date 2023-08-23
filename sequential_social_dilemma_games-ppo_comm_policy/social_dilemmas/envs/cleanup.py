@@ -3,9 +3,9 @@ from gym.spaces import Discrete
 import numpy as np
 import random
 
-from social_dilemmas.constants import CLEANUP_MAP
-from social_dilemmas.envs.map_env import MapEnv, ACTIONS
-from social_dilemmas.envs.agent import CleanupAgent  # CLEANUP_VIEW_SIZE
+from sequential_social_dilemma_games.social_dilemmas.constants import CLEANUP_MAP
+from sequential_social_dilemma_games.social_dilemmas.envs.map_env import MapEnv, ACTIONS
+from sequential_social_dilemma_games.social_dilemmas.envs.agent import CleanupAgent  # CLEANUP_VIEW_SIZE
 
 # Add custom actions to the agent
 ACTIONS['FIRE'] = 5  # length of firing beam
@@ -13,9 +13,9 @@ ACTIONS['CLEAN'] = 5  # length of cleanup beam
 
 # Custom colour dictionary
 CLEANUP_COLORS = {'C': [100, 255, 255],  # Cyan cleaning beam
-                  'S': [113, 75, 24],  # Light grey-blue stream cell
-                  'H': [99, 156, 194],  # brown waste cells
-                  'R': [113, 75, 24]}  # Light grey-blue river cell
+                  'S': [99, 156, 194],  # Light grey-blue stream cell
+                  'H': [113, 75, 24],  # brown waste cells
+                  'R': [99, 156, 194]}  # Light grey-blue river cell
 
 SPAWN_PROB = [0, 0.005, 0.02, 0.05]
 
