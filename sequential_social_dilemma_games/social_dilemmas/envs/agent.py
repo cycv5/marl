@@ -1,7 +1,7 @@
 """Base class for an agent that defines the possible actions. """
 
 import numpy as np
-import sequential_social_dilemma_games.utility_funcs as util
+import marl.sequential_social_dilemma_games.utility_funcs as util
 
 # basic moves every agent should do
 BASE_ACTIONS = {0: 'MOVE_LEFT',  # Move left

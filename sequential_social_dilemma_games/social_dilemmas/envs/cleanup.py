@@ -3,9 +3,9 @@ from gym.spaces import Discrete
 import numpy as np
 import random
 
-from sequential_social_dilemma_games.social_dilemmas.constants import CLEANUP_MAP
-from sequential_social_dilemma_games.social_dilemmas.envs.map_env import MapEnv, ACTIONS
-from sequential_social_dilemma_games.social_dilemmas.envs.agent import CleanupAgent  # CLEANUP_VIEW_SIZE
+from marl.sequential_social_dilemma_games.social_dilemmas.constants import CLEANUP_MAP
+from marl.sequential_social_dilemma_games.social_dilemmas.envs.map_env import MapEnv, ACTIONS
+from marl.sequential_social_dilemma_games.social_dilemmas.envs.agent import CleanupAgent  # CLEANUP_VIEW_SIZE
 
 # Add custom actions to the agent
 ACTIONS['FIRE'] = 5  # length of firing beam
