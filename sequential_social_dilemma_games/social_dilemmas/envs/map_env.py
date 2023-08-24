@@ -211,7 +211,7 @@ class MapEnv(MultiAgentEnv):
         dones["__all__"] = np.any(list(dones.values()))
         return observations, rewards, dones, info
 
-    def reset(self):
+    def reset(self, seed=None):
         """Reset the environment.
 
         This method is performed in between rollouts. It resets the state of
@@ -480,7 +480,7 @@ class MapEnv(MultiAgentEnv):
                         if conflict_cell_free:
                             self.agents[agent_to_slot[index]].update_agent_pos(move)
                             agent_by_pos = {tuple(agent.get_pos()):
-                                            agent.agent_id for agent in self.agents.values()}
+                                                agent.agent_id for agent in self.agents.values()}
                         # ------------------------------------
                         # remove all the other moves that would have conflicted
                         remove_indices = np.where((search_list == move).all(axis=1))[0]
@@ -493,7 +493,7 @@ class MapEnv(MultiAgentEnv):
             # make the remaining un-conflicted moves
             while len(agent_moves.items()) > 0:
                 agent_by_pos = {tuple(agent.get_pos()):
-                                agent.agent_id for agent in self.agents.values()}
+                                    agent.agent_id for agent in self.agents.values()}
                 num_moves = len(agent_moves.items())
                 moves_copy = agent_moves.copy()
                 del_keys = []
@@ -767,4 +767,4 @@ class MapEnv(MultiAgentEnv):
         other_agent_pos = [self.agents[agent_id].get_pos()for other_agent_id in
                            sorted(self.agents.keys()) if other_agent_id != agent_id]
         return np.array([1 if (lower_lim <= agent_tup[0] <= upper_lim
-                 and left_lim <= agent_tup[1] <= right_lim) else 0 for agent_tup in other_agent_pos])
+                               and left_lim <= agent_tup[1] <= right_lim) else 0 for agent_tup in other_agent_pos])

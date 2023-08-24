@@ -1,4 +1,4 @@
-from gym.spaces import Box, Dict, Discrete
+from gymnasium.spaces import Box, Dict, Discrete
 import numpy as np
 
 from marl.sequential_social_dilemma_games.social_dilemmas.envs.agent import HarvestAgent  # HARVEST_VIEW_SIZE
@@ -32,7 +32,7 @@ class HarvestEnv(MapEnv):
         if self.return_agent_actions:
             # We will append on some extra values to represent the actions of other agents
             return Dict({"curr_obs": Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1,
-                                                 2 * self.view_len + 1, 3), dtype=np.float32),
+                                                                              2 * self.view_len + 1, 3), dtype=np.float32),
                          "other_agent_actions": Box(low=0, high=len(ACTIONS), shape=(self.num_agents - 1, ), dtype=np.int32,),
                          "visible_agents": Box(low=0, high=self.num_agents, shape=(self.num_agents - 1,), dtype=np.int32)})
         else:
@@ -47,7 +47,7 @@ class HarvestEnv(MapEnv):
         map_with_agents = self.get_map_with_agents()
 
         for i in range(self.num_agents):
-            agent_id = 'agent-' + str(i)
+            agent_id = str(i)
             spawn_point = self.spawn_point()
             rotation = self.spawn_rotation()
             grid = map_with_agents
