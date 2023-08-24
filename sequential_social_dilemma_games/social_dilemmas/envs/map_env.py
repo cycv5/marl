@@ -209,9 +209,9 @@ class MapEnv(MultiAgentEnv):
             dones[agent.agent_id] = agent.get_done()
 
         dones["__all__"] = np.any(list(dones.values()))
-        return observations, rewards, dones, info
+        return observations, rewards, dones, {"__all__": False}, info
 
-    def reset(self, seed=None):
+    def reset(self, seed=None, options=None):
         """Reset the environment.
 
         This method is performed in between rollouts. It resets the state of
@@ -246,7 +246,7 @@ class MapEnv(MultiAgentEnv):
                                                 "visible_agents": self.find_visible_agents(agent.agent_id)}
             else:
                 observations[agent.agent_id] = rgb_arr
-        return observations
+        return observations, {}
 
     @property
     def agent_pos(self):
