@@ -100,6 +100,7 @@ class MapEnv(MultiAgentEnv):
                 elif self.base_map[row, col] == '@':
                     self.wall_points.append([row, col])
         self.setup_agents()
+        self.step_count = 0
 
     def custom_reset(self):
         """Reset custom elements of the map. For example, spawn apples and build walls"""
@@ -165,7 +166,7 @@ class MapEnv(MultiAgentEnv):
         dones: dict indicating whether each agent is done
         info: dict to pass extra info to gym
         """
-
+        self.step_count += 1
         self.beam_pos = []
         agent_actions = {}
         for agent_id, action in actions.items():
@@ -206,9 +207,15 @@ class MapEnv(MultiAgentEnv):
             else:
                 observations[agent.agent_id] = rgb_arr
             rewards[agent.agent_id] = agent.compute_reward()
-            dones[agent.agent_id] = agent.get_done()
+            # dones[agent.agent_id] = agent.get_done()
 
-        dones["__all__"] = np.any(list(dones.values()))
+        # dones["__all__"] = np.any(list(dones.values()))
+        if self.step_count == 1000:
+            dones["__all__"] = True
+            self.step_count = 0
+        else:
+            dones["__all__"] = False
+
         return observations, rewards, dones, {"__all__": False}, info
 
     def reset(self, seed=None, options=None):
@@ -228,6 +235,7 @@ class MapEnv(MultiAgentEnv):
         self.setup_agents()
         self.reset_map()
         self.custom_map_update()
+        self.step_count = 0
 
         map_with_agents = self.get_map_with_agents()
 
