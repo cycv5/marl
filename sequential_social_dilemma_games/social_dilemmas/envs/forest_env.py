@@ -1,11 +1,11 @@
 from __future__ import annotations
 import random
 import numpy as np
-from gymnasium import spaces, Env
+from gymnasium.spaces import Box, Dict, Discrete, MultiDiscrete
 from matplotlib import pyplot as plt
 import seaborn as sns
 from matplotlib.colors import ListedColormap
-
+from ray.rllib.env import MultiAgentEnv
 from marl.sequential_social_dilemma_games.social_dilemmas.envs.agent import \
     ForrestAgent
 
@@ -68,10 +68,10 @@ class ForestEnv(MultiAgentEnv):
         # Env confinguration
         self.num_agents = num_agents
 
-        self.action_space = spaces.Discrete(12)
+        self.action_space = Discrete(12)
 
         # 9 resources, 3 tools (1 peeled), Presense of other agent, 9 resources in a random nearby location, 8 positions for this resource
-        self.observation_space = spces.MultiDiscrete([10, 5, 2, 10, 8])
+        self.observation_space = MultiDiscrete([10, 5, 2, 10, 8])
 
         self.agents = {}
         self.setup_agents()
@@ -173,6 +173,6 @@ class ForestEnv(MultiAgentEnv):
                 res_cmap[i][j] = int(res_cmap[i][j])
         cmap = ListedColormap(['white', 'green', 'xkcd:chartreuse', 'tab:brown',
                                'xkcd:sienna', 'red', 'grey', 'yellow', 'tab:orange'])
-        sns.heatmap(res_cmap, cmap=cmap, annot=labels, fmt='s', cbar=False)
+        sns.heatmap(res_cmap, cmap=cmap, annot=labels, fmt='s', cbar=False, linewidths=1, linecolor='black')
         plt.show()
         return None
