@@ -44,7 +44,7 @@ DEFAULT_COLOURS = {' ': [0, 0, 0],  # Black background
 tools = {"0": "nothing",  "1":"stones",  "2":"large stones",  "3":"sticks",  "4":"peeled sticks"}
 
 
-class SimpleGridEnv(MultiAgentEnv):
+class ForestEnv(MultiAgentEnv):
     """
     Forest environment
     """
