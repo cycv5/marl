@@ -220,3 +220,17 @@ class CleanupAgent(Agent):
             return ' '
         else:
             return char
+
+class ForrestAgent():
+    def __init__(self, agent_id, start_pos):
+        self.agent_id = agent_id
+        self.pos = np.array(start_pos)
+        self.holding = "0"
+        self.age = 0
+
+    def get_older(self, amount):
+        self.age += amount
+    def pick_up(self, tool):
+        self.holding = tool
+    def drop(self):
+        self.holding = "0"
