@@ -41,7 +41,7 @@ DEFAULT_COLOURS = {' ': [0, 0, 0],  # Black background
                    '8': [250, 204, 255],  # Pink
                    '9': [238, 223, 16]}  # Yellow
 
-tools = {"0": "nothing",  "1":"stones",  "2":"large stones",  "3":"sticks",  "4":"peeled sticks"}
+tools = {"0": "nothing",  "1":"stn",  "2":"l_stn",  "3":"stk",  "4":"p_stk"}
 
 
 class ForestEnv(MultiAgentEnv):
@@ -161,11 +161,14 @@ class ForestEnv(MultiAgentEnv):
         labels = [[""]*10 for i in range(10)]
         for agent in self.agents.values():
             if agent.holding == "0":
-                labels[agent.pos[0]][agent.pos[1]] += "{}\n".format(agent.agent_id)
+                labels[agent.pos[0]][agent.pos[1]] += "{} ".format(agent.agent_id)
             else:
-                labels[agent.pos[0]][agent.pos[1]] += "{}({})\n".format(agent.agent_id, tools[agent.holding])
+                labels[agent.pos[0]][agent.pos[1]] += "{}({}) ".format(agent.agent_id, tools[agent.holding])
+
         for tk in self.tool_pos.keys():
-            labels[tk[0]][tk[1]] += self.tool_pos[tk]
+            if labels[tk[0]][tk[1]] != "":
+                labels[tk[0]][tk[1]] += "\n"
+            labels[tk[0]][tk[1]] += tools[self.tool_pos[tk]]
 
         res_cmap = [list(s) for s in self.res_map]
         for i in range(10):
@@ -174,5 +177,6 @@ class ForestEnv(MultiAgentEnv):
         cmap = ListedColormap(['white', 'green', 'xkcd:chartreuse', 'tab:brown',
                                'xkcd:sienna', 'red', 'grey', 'yellow', 'tab:orange'])
         sns.heatmap(res_cmap, cmap=cmap, annot=labels, fmt='s', cbar=False, linewidths=1, linecolor='black')
+        sns.set(font_scale=0.5)
         plt.show()
-        return None
+        return labels
