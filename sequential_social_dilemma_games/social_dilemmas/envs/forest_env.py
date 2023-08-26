@@ -103,7 +103,8 @@ class ForestEnv(MultiAgentEnv):
             local_tool = str(self.tool_map[agent.pos[0]][agent.pos[1]])
             other_agent_present = 0
             for other_agent in self.live_agents.values():
-                if other_agent.agent_id != agent.agent_id and other_agent.pos == agent.pos:
+                if other_agent.agent_id != agent.agent_id and \
+                        (other_agent.pos[0], other_agent.pos[1]) == (agent.pos[0], agent.pos[1]):
                     other_agent_present = 1
                     break
             valid_nearby = self.get_valid_nearby(agent)
@@ -131,7 +132,7 @@ class ForestEnv(MultiAgentEnv):
         rewards = {}
         dones = {}
         self.timestamp += 1
-        for agent in self.live_agents.values():
+        for agent in list(self.live_agents.values()):
             agent.get_older(1)
             if agent.age >= 10000:
                 self.kill_agent(agent.agent_id)
@@ -151,7 +152,7 @@ class ForestEnv(MultiAgentEnv):
                     agent.holding = "0"
                     agent.holding_live = np.infty
         # tool decay for sticks on the ground
-        for tk in self.tool_pos.keys():
+        for tk in list(self.tool_pos.keys()):
             if self.tool_pos[tk][0] == "3" or self.tool_pos[tk][0] == "4":
                 self.tool_pos[tk][1] -= 1
                 if self.tool_pos[tk][1] == 0:
@@ -163,7 +164,8 @@ class ForestEnv(MultiAgentEnv):
             local_tool = str(self.tool_map[agent.pos[0]][agent.pos[1]])
             other_agent_present = 0
             for other_agent in self.live_agents.values():
-                if other_agent.agent_id != agent.agent_id and other_agent.pos == agent.pos:
+                if other_agent.agent_id != agent.agent_id and \
+                        (other_agent.pos[0], other_agent.pos[1]) == (agent.pos[0], agent.pos[1]):
                     other_agent_present = 1
                     break
             valid_nearby = self.get_valid_nearby(agent)
@@ -196,7 +198,8 @@ class ForestEnv(MultiAgentEnv):
         local_tool = self.tool_map[agent.pos[0]][agent.pos[1]]
         other_agent_present = 0
         for other_agent in self.live_agents.values():
-            if other_agent.agent_id != agent.agent_id and other_agent.pos == agent.pos:
+            if other_agent.agent_id != agent.agent_id and \
+                    (other_agent.pos[0], other_agent.pos[1]) == (agent.pos[0], agent.pos[1]):
                 other_agent_present = 1
                 break
         if local_res == "1": # tree
