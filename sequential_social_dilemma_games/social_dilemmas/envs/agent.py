@@ -221,16 +221,21 @@ class CleanupAgent(Agent):
         else:
             return char
 
-class ForrestAgent():
+
+class ForestAgent():
     def __init__(self, agent_id, start_pos):
         self.agent_id = agent_id
         self.pos = np.array(start_pos)
-        self.holding = "0"
+        self.holding = "0" # what is the agent holding
+        self.holding_live = np.infty # remaining live of the item being held
         self.age = 0
 
     def get_older(self, amount):
         self.age += amount
-    def pick_up(self, tool):
+
+    def pick_up(self, tool, live):
         self.holding = tool
+        self.holding_live = live
+
     def drop(self):
         self.holding = "0"
