@@ -121,7 +121,7 @@ class ForestEnv(MultiAgentEnv):
                 if self.base_res_map[i][j] != "0":
                     self.res_pos[(i,j)] = [self.base_res_map[i][j], res_live[self.base_res_map[i][j]]]
                 if self.base_tool_map[i][j] != "0":
-                    self.tool_pos[(i,j)] = [self.base_tool_map[i][j], tools_live[tool_map[i][j]]]
+                    self.tool_pos[(i,j)] = [self.base_tool_map[i][j], tools_live[self.base_tool_map[i][j]]]
         self.res_map = [list(s) for s in self.base_res_map]
         self.tool_map = [list(s) for s in self.base_tool_map]
 
@@ -136,16 +136,19 @@ class ForestEnv(MultiAgentEnv):
                     break
             valid_nearby = self.get_valid_nearby(agent)
             nearby_pos = random.randint(0,len(valid_nearby)-1)
-            res_nearby = str(self.res_map[valid_nearby[nearby_pos][0]][valid_nearby[nearby_pos][1]])
-            observations[agent.agent_id] = np.array([int(local_res), int(local_tool), int(other_agent_present), int(res_nearby), int(nearby_pos)])
+            pos, index = valid_nearby[nearby_pos]
+            res_nearby = str(self.res_map[pos[0]][pos[1]])
+            observations[agent.agent_id] = np.array([int(local_res), int(local_tool), int(other_agent_present), int(res_nearby), int(index)])
         return observations, {}
 
     def get_valid_nearby(self, agent):
         x, y = agent.pos[0], agent.pos[1]
         ret = []
+        i = 0
         for x_diff, y_diff in NearBy:
             if 0 <= x+x_diff < 10 and 0 <= y+y_diff < 10:
-                ret.append((x + x_diff, y + y_diff))
+                ret.append([(x + x_diff, y + y_diff), i])
+            i += 1
         return ret
 
     def step(self, actions):
@@ -163,7 +166,7 @@ class ForestEnv(MultiAgentEnv):
             self.last_agent += 1
             self.live_agents[str(self.last_agent)] = self.agents[str(self.last_agent)]
             actions[str(self.last_agent)] = "0"  # fill the new born agent
-        for agent_id, action in actions:
+        for agent_id, action in actions.items():
             if agent_id in self.live_agents:
                 r = self.process_action(agent_id, action)
                 rewards[agent_id] = r
@@ -192,8 +195,10 @@ class ForestEnv(MultiAgentEnv):
                     break
             valid_nearby = self.get_valid_nearby(agent)
             nearby_pos = random.randint(0,len(valid_nearby)-1)
-            res_nearby = str(self.res_map[valid_nearby[nearby_pos][0]][valid_nearby[nearby_pos][1]])
-            obs[agent.agent_id] = np.array([int(local_res), int(local_tool), int(other_agent_present), int(res_nearby), int(nearby_pos)])
+            pos, index = valid_nearby[nearby_pos]
+            res_nearby = str(self.res_map[pos[0]][pos[1]])
+            obs[agent.agent_id] = np.array([int(local_res), int(local_tool), int(other_agent_present), int(res_nearby), int(index)])
+            agent.last_seen_pos = index
         done = self.timestamp == 100000
         return obs, rewards, done, False, None
 
@@ -221,9 +226,6 @@ class ForestEnv(MultiAgentEnv):
             if other_agent.agent_id != agent.agent_id and other_agent.pos == agent.pos:
                 other_agent_present = 1
                 break
-        valid_nearby = self.get_valid_nearby(agent)
-        nearby_pos = random.randint(0,len(valid_nearby)-1)
-        res_nearby = self.res_map[valid_nearby[nearby_pos][0]][valid_nearby[nearby_pos][1]]
         if local_res == "1": # tree
             reward += 1
         elif local_res == "2": # berries
@@ -313,7 +315,7 @@ class ForestEnv(MultiAgentEnv):
                 if random.random() < 0.2:
                     reward += np.random.normal(-200, 50)
                 if action == 6 and (agent.holding == "3" or agent.holding == "4") \
-                    and (local_tool == "3" or local_tool == "4"):
+                        and (local_tool == "3" or local_tool == "4"):
                     reward += np.random.normal(500, 50)
                     self.res_pos[(agent.pos[0],agent.pos[1])][1] -= 1
                     if self.res_pos[(agent.pos[0],agent.pos[1])][1] == 0:
@@ -353,8 +355,9 @@ class ForestEnv(MultiAgentEnv):
                 self.tool_map[agent.pos[0]][agent.pos[1]] = "0"
                 self.tool_pos.pop((agent.pos[0],agent.pos[1]))
         elif action == 11:
-            if len(valid_nearby) > 0:
-                agent.pos = [valid_nearby[nearby_pos][0], valid_nearby[nearby_pos][1]]
+            if agent.last_seen_pos is not None:
+                x_diff, y_diff = NearBy[agent.last_seen_pos]
+                agent.pos = [agent.pos[0]+x_diff, agent.pos[1]+y_diff]
 
         return reward
 
@@ -393,14 +396,14 @@ class ForestEnv(MultiAgentEnv):
         for tk in self.tool_pos.keys():
             if labels[tk[0]][tk[1]] != "":
                 labels[tk[0]][tk[1]] += "\n"
-            labels[tk[0]][tk[1]] += tools[self.tool_pos[tk]]
+            labels[tk[0]][tk[1]] += tools[self.tool_pos[tk][0]]
 
         res_cmap = [list(s) for s in self.res_map]
         for i in range(10):
             for j in range(10):
                 res_cmap[i][j] = int(res_cmap[i][j])
-        cmap = ListedColormap(['white', 'green', 'xkcd:chartreuse', 'tab:brown',
-                               'xkcd:sienna', 'red', 'grey', 'yellow', 'tab:orange'])
+        cmap = ListedColormap(['white', 'green', 'blue', 'xkcd:chartreuse', 'tab:brown',
+                               'xkcd:sienna', 'red', 'grey', 'yellow', "xkcd:beige"])
         sns.heatmap(res_cmap, cmap=cmap, annot=labels, fmt='s', cbar=False, linewidths=1, linecolor='black')
         sns.set(font_scale=0.5)
         plt.show()

@@ -229,6 +229,7 @@ class ForestAgent():
         self.holding = "0" # what is the agent holding
         self.holding_live = np.infty # remaining live of the item being held
         self.age = 0
+        self.last_seen_pos = None
 
     def get_older(self, amount):
         self.age += amount
