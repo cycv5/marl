@@ -9,42 +9,14 @@ from ray.rllib.env import MultiAgentEnv
 from marl.sequential_social_dilemma_games.social_dilemmas.envs.agent import \
     ForestAgent
 
-MAPS = ["0000000000",
-        "0000000000",
-        "0000000000",
-        "0000000000",
-        "0000000000",
-        "0000000000",
-        "0000000000",
-        "0000000000",
-        "0000000000",
-        "0000000000"]
 
 NearBy = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,1), (1,-1), (1,0), (1,1)]
-
-DEFAULT_COLOURS = {' ': [0, 0, 0],  # Black background
-                   '0': [0, 0, 0],  # Black background beyond map walls
-                   '': [180, 180, 180],  # Grey board walls
-                   '@': [180, 180, 180],  # Grey board walls
-                   'A': [0, 255, 0],  # Green apples
-                   'F': [255, 255, 0],  # Yellow fining beam
-                   'P': [159, 67, 255],  # Purple player
-
-                   # Colours for agents. R value is a unique identifier
-                   '1': [159, 67, 255],  # Purple
-                   '2': [2, 81, 154],  # Blue
-                   '3': [204, 0, 204],  # Magenta
-                   '4': [216, 30, 54],  # Red
-                   '5': [254, 151, 0],  # Orange
-                   '6': [100, 255, 255],  # Cyan
-                   '7': [99, 99, 255],  # Lavender
-                   '8': [250, 204, 255],  # Pink
-                   '9': [238, 223, 16]}  # Yellow
 
 tools = {"0": "nothing",  "1":"stn",  "2":"l_stn",  "3":"stk",  "4":"p_stk"}
 
 res_live = {"0": np.infty, "1": np.infty, "2": 20, "3": 20, "4": 10, "5": 5,
             "6": 2, "7": np.infty, "8": 1, "9": np.infty}
+
 tools_live = {"0": np.infty, "1": np.infty, "2": np.infty, "3": 1000, "4": 500}
 
 
@@ -157,6 +129,7 @@ class ForestEnv(MultiAgentEnv):
         """
         obs = {}
         rewards = {}
+        dones = {}
         self.timestamp += 1
         for agent in self.live_agents.values():
             agent.get_older(1)
@@ -199,8 +172,8 @@ class ForestEnv(MultiAgentEnv):
             res_nearby = str(self.res_map[pos[0]][pos[1]])
             obs[agent.agent_id] = np.array([int(local_res), int(local_tool), int(other_agent_present), int(res_nearby), int(index)])
             agent.last_seen_pos = index
-        done = self.timestamp == 100000
-        return obs, rewards, done, False, None
+        dones["__all__"] = self.timestamp == 100000
+        return obs, rewards, dones, {"__all__": False}, {}
 
     def kill_agent(self, agent_id):
         self.live_agents.pop(agent_id)
