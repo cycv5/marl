@@ -67,5 +67,6 @@ Every environment that subclasses MapEnv probably needs to implement the followi
 ```
         
 # Contributors
+The forest environment is developed by Yichen, along with modifications to the Cleanup & Harvest Game in this repo.
 The watershed games and accompanied code is developed by Shresth Verma.
 This original code base for SSDs was developed by Eugene Vinitsky and Natasha Jaques.
