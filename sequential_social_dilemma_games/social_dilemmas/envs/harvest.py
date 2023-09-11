@@ -36,8 +36,8 @@ class HarvestEnv(MapEnv):
                          "other_agent_actions": Box(low=0, high=len(ACTIONS), shape=(self.num_agents - 1, ), dtype=np.int32,),
                          "visible_agents": Box(low=0, high=self.num_agents, shape=(self.num_agents - 1,), dtype=np.int32)})
         else:
-            return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1,
-                                                 2 * self.view_len + 1, 3), dtype=np.float32)
+            # return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1, 2 * self.view_len + 1, 3), dtype=np.float32)
+            return Box(low=-np.infty, high=np.infty, shape=(self.base_map.shape[0], self.base_map.shape[1], 3), dtype=np.float32)
 
     @property
     def action_space(self):
@@ -51,7 +51,7 @@ class HarvestEnv(MapEnv):
             spawn_point = self.spawn_point()
             rotation = self.spawn_rotation()
             grid = map_with_agents
-            agent = HarvestAgent(agent_id, spawn_point, rotation, grid, view_len=HARVEST_VIEW_SIZE)
+            agent = HarvestAgent(agent_id, spawn_point, rotation, grid, view_len=None)
             self.agents[agent_id] = agent
 
     def custom_reset(self):

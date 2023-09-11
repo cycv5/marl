@@ -78,8 +78,8 @@ class CleanupEnv(MapEnv):
                          "other_agent_actions": Box(low=0, high=len(ACTIONS), shape=(self.num_agents - 1, ), dtype=np.int32,),
                          "visible_agents": Box(low=0, high=self.num_agents, shape=(self.num_agents - 1,), dtype=np.int32)})
         else:
-            return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1,
-                                                            2 * self.view_len + 1, 3), dtype=np.float32)
+            # return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1, 2 * self.view_len + 1, 3), dtype=np.float32)
+            return Box(low=-np.infty, high=np.infty, shape=(self.base_map.shape[0], self.base_map.shape[1], 3), dtype=np.float32)
 
     def custom_reset(self):
         """Initialize the walls and the waste"""
@@ -126,7 +126,7 @@ class CleanupEnv(MapEnv):
             # grid = util.return_view(map_with_agents, spawn_point,
             #                         CLEANUP_VIEW_SIZE, CLEANUP_VIEW_SIZE)
             # agent = CleanupAgent(agent_id, spawn_point, rotation, grid)
-            agent = CleanupAgent(agent_id, spawn_point, rotation, map_with_agents, view_len=CLEANUP_VIEW_SIZE)
+            agent = CleanupAgent(agent_id, spawn_point, rotation, map_with_agents, view_len=None)
             self.agents[agent_id] = agent
 
     def spawn_apples_and_waste(self):
