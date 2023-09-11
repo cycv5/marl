@@ -12,7 +12,7 @@ ACTIONS['FIRE'] = 5  # length of firing range
 
 SPAWN_PROB = [0, 0.005, 0.02, 0.05]
 
-HARVEST_VIEW_SIZE = 7
+HARVEST_VIEW_SIZE = 38
 
 
 class HarvestEnv(MapEnv):
@@ -36,8 +36,7 @@ class HarvestEnv(MapEnv):
                          "other_agent_actions": Box(low=0, high=len(ACTIONS), shape=(self.num_agents - 1, ), dtype=np.int32,),
                          "visible_agents": Box(low=0, high=self.num_agents, shape=(self.num_agents - 1,), dtype=np.int32)})
         else:
-            # return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1, 2 * self.view_len + 1, 3), dtype=np.float32)
-            return Box(low=-np.infty, high=np.infty, shape=(self.base_map.shape[0], self.base_map.shape[1], 3), dtype=np.float32)
+            return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1, 2 * self.view_len + 1, 3), dtype=np.float32)
 
     @property
     def action_space(self):
