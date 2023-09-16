@@ -35,7 +35,7 @@ DEFAULT_COLOURS = {' ': [0, 0, 0],  # Black background
                    '3': [204, 0, 204],  # Magenta
                    '4': [216, 30, 54],  # Red
                    '5': [254, 151, 0],  # Orange
-                   '6': [100, 255, 255],  # Cyan
+                   '6': [99, 255, 255],  # Cyan
                    '7': [99, 99, 255],  # Lavender
                    '8': [250, 204, 255],  # Pink
                    '9': [238, 223, 16]}  # Yellow
@@ -197,6 +197,10 @@ class MapEnv(MultiAgentEnv):
             agent.grid = map_with_agents
             rgb_arr = self.map_to_colors(agent.get_state(), self.color_map)
             rgb_arr = self.rotate_view(agent.orientation, rgb_arr)
+            arr = np.zeros([rgb_arr.shape[0], rgb_arr.shape[1]])
+            for i in range(rgb_arr.shape[0]):
+                for j in range(rgb_arr.shape[1]):
+                    arr[i][j] = self.colour_to_num(rgb_arr[i][j])
             # rgb_arr = (rgb_arr - 128.00) / 255.0
             # concatenate on the prev_actions to the observations
             if self.return_agent_actions:
@@ -205,7 +209,7 @@ class MapEnv(MultiAgentEnv):
                 observations[agent.agent_id] = {"curr_obs": rgb_arr, "other_agent_actions": prev_actions,
                                                 "visible_agents": self.find_visible_agents(agent.agent_id)}
             else:
-                observations[agent.agent_id] = rgb_arr
+                observations[agent.agent_id] = arr
             rewards[agent.agent_id] = agent.compute_reward()
             # dones[agent.agent_id] = agent.get_done()
 
@@ -245,6 +249,10 @@ class MapEnv(MultiAgentEnv):
             # agent.grid = util.return_view(map_with_agents, agent.pos,
             #                               agent.row_size, agent.col_size)
             rgb_arr = self.map_to_colors(agent.get_state(), self.color_map)
+            arr = np.zeros([rgb_arr.shape[0], rgb_arr.shape[1]])
+            for i in range(rgb_arr.shape[0]):
+                for j in range(rgb_arr.shape[1]):
+                    arr[i][j] = self.colour_to_num(rgb_arr[i][j])
             # rgb_arr = (rgb_arr - 128.0) / 255.0
             # concatenate on the prev_actions to the observations
             if self.return_agent_actions:
@@ -253,7 +261,7 @@ class MapEnv(MultiAgentEnv):
                 observations[agent.agent_id] = {"curr_obs": rgb_arr, "other_agent_actions": prev_actions,
                                                 "visible_agents": self.find_visible_agents(agent.agent_id)}
             else:
-                observations[agent.agent_id] = rgb_arr
+                observations[agent.agent_id] = arr
         return observations, {}
 
     @property
@@ -776,3 +784,41 @@ class MapEnv(MultiAgentEnv):
                            sorted(self.agents.keys()) if other_agent_id != agent_id]
         return np.array([1 if (lower_lim <= agent_tup[0] <= upper_lim
                                and left_lim <= agent_tup[1] <= right_lim) else 0 for agent_tup in other_agent_pos])
+
+
+    def colour_to_num(self, c):
+        if c == [0,0,0]: # void
+            return 0
+        elif c == [180,180,180]: # Wall
+            return 15
+        elif c == [0, 255, 0]: # Apple
+            return 10
+        elif c == [159, 67, 255]:
+            return 1
+        elif c == [2, 81, 154]:
+            return 2
+        elif c == [204, 0, 204]:
+            return 3
+        elif c == [216, 30, 54]:
+            return 4
+        elif c == [254, 151, 0]:
+            return 5
+        elif c == [99, 255, 255]:
+            return 6
+        elif c == [99, 99, 255]:
+            return 7
+        elif c == [250, 204, 255]:
+            return 8
+        elif c == [238, 223, 16]:
+            return 9
+        elif c == [255, 255, 0]:
+            return 11
+        elif c == [100, 255, 255]: # cyan cleaning
+            return 12
+        elif c == [99, 156, 194]: # blue river
+            return 13
+        elif c == [113, 75, 24]: # waste
+            return 14
+        else:
+            return 0
+
