@@ -197,7 +197,7 @@ class MapEnv(MultiAgentEnv):
             agent.grid = map_with_agents
             rgb_arr = self.map_to_colors(agent.get_state(), self.color_map)
             rgb_arr = self.rotate_view(agent.orientation, rgb_arr)
-            rgb_arr = (rgb_arr - 128.00) / 255.0
+            # rgb_arr = (rgb_arr - 128.00) / 255.0
             # concatenate on the prev_actions to the observations
             if self.return_agent_actions:
                 prev_actions = np.array([actions[key] for key in sorted(actions.keys())
@@ -245,7 +245,7 @@ class MapEnv(MultiAgentEnv):
             # agent.grid = util.return_view(map_with_agents, agent.pos,
             #                               agent.row_size, agent.col_size)
             rgb_arr = self.map_to_colors(agent.get_state(), self.color_map)
-            rgb_arr = (rgb_arr - 128.0) / 255.0
+            # rgb_arr = (rgb_arr - 128.0) / 255.0
             # concatenate on the prev_actions to the observations
             if self.return_agent_actions:
                 # No previous actions so just pass in zeros
