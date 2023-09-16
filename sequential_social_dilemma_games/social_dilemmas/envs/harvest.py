@@ -36,7 +36,7 @@ class HarvestEnv(MapEnv):
                          "other_agent_actions": Box(low=0, high=len(ACTIONS), shape=(self.num_agents - 1, ), dtype=np.int32,),
                          "visible_agents": Box(low=0, high=self.num_agents, shape=(self.num_agents - 1,), dtype=np.int32)})
         else:
-            return Box(low=0, high=15, shape=(2 * self.view_len + 1, 2 * self.view_len + 1, 3), dtype=np.int32)
+            return Box(low=0, high=15, shape=(2 * self.view_len + 1, 2 * self.view_len + 1), dtype=np.int32)
 
     @property
     def action_space(self):
