@@ -785,40 +785,42 @@ class MapEnv(MultiAgentEnv):
         return np.array([1 if (lower_lim <= agent_tup[0] <= upper_lim
                                and left_lim <= agent_tup[1] <= right_lim) else 0 for agent_tup in other_agent_pos])
 
-
     def colour_to_num(self, c):
-        if c == [0,0,0]: # void
+        # c = c.tolist()
+        if self.list_equal(c, [0,0,0]): # void
             return 0
-        elif c == [180,180,180]: # Wall
+        elif self.list_equal(c, [180,180,180]): # Wall
             return 15
-        elif c == [0, 255, 0]: # Apple
+        elif self.list_equal(c, [0, 255, 0]): # Apple
             return 10
-        elif c == [159, 67, 255]:
+        elif self.list_equal(c, [159, 67, 255]):
             return 1
-        elif c == [2, 81, 154]:
+        elif self.list_equal(c, [2, 81, 154]):
             return 2
-        elif c == [204, 0, 204]:
+        elif self.list_equal(c, [204, 0, 204]):
             return 3
-        elif c == [216, 30, 54]:
+        elif self.list_equal(c, [216, 30, 54]):
             return 4
-        elif c == [254, 151, 0]:
+        elif self.list_equal(c, [254, 151, 0]):
             return 5
-        elif c == [99, 255, 255]:
+        elif self.list_equal(c, [99, 255, 255]):
             return 6
-        elif c == [99, 99, 255]:
+        elif self.list_equal(c, [99, 99, 255]):
             return 7
-        elif c == [250, 204, 255]:
+        elif self.list_equal(c, [250, 204, 255]):
             return 8
-        elif c == [238, 223, 16]:
+        elif self.list_equal(c, [238, 223, 16]):
             return 9
-        elif c == [255, 255, 0]:
+        elif self.list_equal(c, [255, 255, 0]):
             return 11
-        elif c == [100, 255, 255]: # cyan cleaning
+        elif self.list_equal(c, [100, 255, 255]): # cyan cleaning
             return 12
-        elif c == [99, 156, 194]: # blue river
+        elif self.list_equal(c, [99, 156, 194]): # blue river
             return 13
-        elif c == [113, 75, 24]: # waste
+        elif self.list_equal(c, [113, 75, 24]): # waste
             return 14
         else:
             return 0
 
+    def list_equal(self, l1, l2):
+        return all(x == y for x, y in zip(l1, l2))
