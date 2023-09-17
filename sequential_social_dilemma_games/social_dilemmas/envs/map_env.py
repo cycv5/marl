@@ -196,7 +196,7 @@ class MapEnv(MultiAgentEnv):
         for agent in self.agents.values():
             agent.grid = map_with_agents
             rgb_arr = self.map_to_colors(agent.get_state(), self.color_map)
-            rgb_arr = self.rotate_view(agent.orientation, rgb_arr)
+            # rgb_arr = self.rotate_view(agent.orientation, rgb_arr)
             # arr = np.zeros([rgb_arr.shape[0], rgb_arr.shape[1]])
             # for i in range(rgb_arr.shape[0]):
             #     for j in range(rgb_arr.shape[1]):
