@@ -78,7 +78,8 @@ class CleanupEnv(MapEnv):
                          "other_agent_actions": Box(low=0, high=len(ACTIONS), shape=(self.num_agents - 1, ), dtype=np.int32,),
                          "visible_agents": Box(low=0, high=self.num_agents, shape=(self.num_agents - 1,), dtype=np.int32)})
         else:
-            return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1, 2 * self.view_len + 1, 3), dtype=np.float32)
+            return Box(low=-np.infty, high=np.infty, shape=(25, 18, 3), dtype=np.float32)
+            # return Box(low=-np.infty, high=np.infty, shape=(2 * self.view_len + 1, 2 * self.view_len + 1, 3), dtype=np.float32)
             # return Box(low=0, high=15, shape=(2 * self.view_len + 1, 2 * self.view_len + 1), dtype=np.int32)
 
     def custom_reset(self):
